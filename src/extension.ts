@@ -6,20 +6,61 @@ import * as vscode from 'vscode';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "csv-aligner" is now active!');
+  // Register the inlay hint provider for CSV files
+  context.subscriptions.push(
+    vscode.languages.registerInlayHintsProvider('csv', new CsvAlignInlayHintsProvider())
+  );
+}
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('csv-aligner.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from csv-aligner!');
-	});
+class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
+  provideInlayHints(
+    document: vscode.TextDocument,
+    range: vscode.Range,
+    token: vscode.CancellationToken
+  ): vscode.InlayHint[] {
+    const hints: vscode.InlayHint[] = [];
 
-	context.subscriptions.push(disposable);
+    // Read the entire document and split it into rows
+    const lines = document.getText(range).split('\n');
+
+    // Calculate the maximum width of each column
+    const columnWidths: number[] = [];
+
+    for (const line of lines) {
+      const columns = line.split(',');
+      columns.forEach((col, i) => {
+        const length = col.trim().length;
+        columnWidths[i] = Math.max(columnWidths[i] || 0, length);
+      });
+    }
+
+    // Create inlay hints for each line
+    lines.forEach((line, rowIndex) => {
+      const columns = line.split(',');
+      let currentPos = 0;
+
+      columns.forEach((col, colIndex) => {
+        const startPos = currentPos + col.length;
+        const spacesNeeded = columnWidths[colIndex] - col.trim().length;
+
+        if (spacesNeeded > 0 && colIndex < columns.length - 1) {
+          const position = new vscode.Position(rowIndex, startPos);
+
+          // Add spaces as an inlay hint
+          const hint = new vscode.InlayHint(
+            position,
+            ' '.repeat(spacesNeeded),
+            // vscode.InlayHintKind.Other
+          );
+          hints.push(hint);
+        }
+
+        currentPos = startPos + 1; // Move past the comma
+      });
+    });
+
+    return hints;
+  }
 }
 
 // This method is called when your extension is deactivated
