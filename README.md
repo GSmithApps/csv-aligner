@@ -35,6 +35,7 @@ This extension contributes the following settings:
 
 Doesn't work with csvs that have:
 
+- if the longest item in a column has trailing spaces, it breaks
 - commas in the data
 - newlines in the data
 - delimiters other than commas

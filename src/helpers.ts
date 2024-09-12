@@ -14,6 +14,12 @@ import { getHintAndCurrentPosfromCol } from './getHintAndCurrentPosfromCol';
  * todo:
  * - make general enough for any delimiter
  * - make general enough to handle commas in quoted strings
+ * 
+ * implementation:
+ * - get into grid of strings
+ * - get the grid into string lengths instead of strings
+ * - find the max length of each column
+ * - for each item in the grid, get the hint
  */
 export function getHintsFromString(stringFromDoc: string): vscode.InlayHint[] {
   

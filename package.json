@@ -2,9 +2,9 @@
   "name": "csv-aligner",
   "displayName": "csv-aligner",
   "description": "aligns csvs using text decorations",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "engines": {
-    "vscode": "^1.90.0"
+    "vscode": "^1.80.0"
   },
   "categories": [
     "Other"
@@ -31,6 +31,7 @@
       }
     ]
   },
+  "publisher": "GrantSmith",
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
@@ -40,7 +41,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.90.0",
+    "@types/vscode": "^1.80.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
