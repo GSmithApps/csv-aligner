@@ -1,10 +1,10 @@
 {
   "name": "csv-aligner",
   "displayName": "csv-aligner",
-  "description": "aligns csvs using text decorations",
-  "version": "0.0.4",
+  "description": "aligns csvs using inlay hints",
+  "version": "0.0.5",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.94.0"
   },
   "categories": [
     "Other"
@@ -41,7 +41,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.80.0",
+    "@types/vscode": "^1.94.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
