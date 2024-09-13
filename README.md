@@ -35,7 +35,8 @@ This extension contributes the following settings:
 
 Doesn't work with csvs that have:
 
-- if the longest item in a column has trailing spaces, it breaks
+- We think that vs code is truncating the inlay hints
+  to a max of like 44 characters per line.
 - commas in the data
 - newlines in the data
 - delimiters other than commas

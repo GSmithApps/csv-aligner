@@ -5,7 +5,7 @@ export function getColumnWidthsFromLines(lines: string[], delimiter: string): nu
     for (const line of lines) {
       const columns = line.split(delimiter);
       columns.forEach((col, i) => {
-        const length = col.trim().length;
+        const length = col.length;
         columnWidths[i] = Math.max(columnWidths[i] || 0, length);
       });
     }
