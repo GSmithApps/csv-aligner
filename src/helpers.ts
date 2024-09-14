@@ -1,15 +1,13 @@
 
-import * as vscode from 'vscode';
-
 // import getColumnWidthsFromLines from './getColumnWidthsFromLines';
 import { getColumnWidthsFromLines } from './getColumnWidthsFromLines';
-import { getHintAndCurrentPosfromCol } from './getHintAndCurrentPosfromCol';
+import { getHintAndCurrentPosfromCol, VsCodeInlayHintAdapter } from './getHintAndCurrentPosfromCol';
 
 /**
  * Helper function to generate inlay hints from a CSV string.
  *
  * @param {string} stringFromDoc - The CSV string from the document.
- * @returns {vscode.InlayHint[]} An array of inlay hints.
+ * @returns {VsCodeInlayHintAdapter[]} An array of inlay hints.
  * 
  * todo:
  * - make general enough for any delimiter
@@ -21,14 +19,14 @@ import { getHintAndCurrentPosfromCol } from './getHintAndCurrentPosfromCol';
  * - find the max length of each column
  * - for each item in the grid, get the hint
  */
-export function getHintsFromString(stringFromDoc: string): vscode.InlayHint[] {
+export function getHintsFromString(stringFromDoc: string): VsCodeInlayHintAdapter[] {
   
     const lines = stringFromDoc.split('\n');
     
     // Calculate the maximum width of each column
     const columnWidths: number[] = getColumnWidthsFromLines(lines, ',');
 
-    const hints: vscode.InlayHint[] = [];
+    const hints: VsCodeInlayHintAdapter[] = [];
   
     // Create inlay hints for each line
     lines.forEach((line, rowIndex) => {
@@ -36,7 +34,7 @@ export function getHintsFromString(stringFromDoc: string): vscode.InlayHint[] {
       let currentPos = 0;
   
       columns.forEach((col, colIndex) => {
-          const returns = getHintAndCurrentPosfromCol(col, columnWidths[colIndex], currentPos, rowIndex);
+          const returns: [VsCodeInlayHintAdapter, number] = getHintAndCurrentPosfromCol(col, columnWidths[colIndex], currentPos, rowIndex);
           hints.push(returns[0]);
           currentPos = returns[1];
   

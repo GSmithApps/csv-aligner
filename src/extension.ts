@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 
 // import helper function from helpers.ts
 import { getHintsFromString } from './helpers';
+import { VsCodeInlayHintAdapter } from './getHintAndCurrentPosfromCol';
+
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -26,7 +28,9 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
     const stringFromDoc = document.getText(range);
 
     // Return the inlay hints
-    return getHintsFromString(stringFromDoc);
+    const hints: VsCodeInlayHintAdapter[] = getHintsFromString(stringFromDoc);
+
+    return hints.map(hint => new vscode.InlayHint(new vscode.Position(hint.position.rowIndex, hint.position.startPos), hint.label));
 
   }
 }
