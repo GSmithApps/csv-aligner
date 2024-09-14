@@ -1,0 +1,2 @@
+Counterparty,Underlying,UnderlyingValue,Units,Notional,StrikeCap,StrikeFloor,Cost,Notes,VAL,ObservationDate,SecId,ID,TradeDate,ExpirationDate,OptionTypeDesc
+ZZ,SPX,5564.41,215.66,1200000,0,5581.1,99361.0318,REGULAR,94326.09458488434,2024-08-28,205918,TA2404621,2024-07-22 00:00:00.000,2025-07-22 00:00:00.000,Vanilla Call
