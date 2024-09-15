@@ -1,25 +1,16 @@
-
-
-
 import { getHintAndCurrentPosfromCol, VsCodeInlayHintAdapter } from './getHintAndCurrentPosfromCol';
 
 /**
- * Helper function to generate inlay hints from a CSV string.
+ * Helper function to generate inlay hints from the cell lengths
+ * of a CSV.
  *
- * @param {string} stringFromDoc - The CSV string from the document.
- * @returns {VsCodeInlayHintAdapter[]} An array of inlay hints.
- * 
- * todo:
- * - make general enough for any delimiter
- * - make general enough to handle commas in quoted strings
- * 
- * implementation:
- * - get into grid of strings
- * - get the grid into string lengths instead of strings
- * - find the max length of each column
- * - for each item in the grid, get the hint
+ * @param {string[][]} cellLengths - The lengths of the cells in the CSV
+ * @param {number[]} columnMaxWidths - The maximum width of each column
+ * @param {number} delimiterLength - The length of the delimiter
+ * @param {string} hintCharacter - The character to use for the hint
+ * @returns {VsCodeInlayHintAdapter[]} - The inlay hints
  */
-export function getHintsFromLines(
+export function getHintsFromCellLengths(
   cellLengths: number[][],
   columnMaxWidths: number[],
   delimiterLength: number,

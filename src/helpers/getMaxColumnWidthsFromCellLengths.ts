@@ -1,5 +1,5 @@
 
-export function getColumnWidthsFromLines(
+export function getMaxColumnWidthsFromCellLengths(
   cellLengths: number[][]
 ): number[] {
     const columnWidths: number[] = [];

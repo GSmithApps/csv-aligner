@@ -1,6 +1,6 @@
 // test the helper functions
 
 // Import the helper functions
-import { getHintsFromLines } from '../helpers';
+import { getHintsFromCellLengths } from '../getHintsFromCellLengths';
 
 // Define the test suite
