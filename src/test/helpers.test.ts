@@ -1,6 +1,6 @@
 // test the helper functions
 
 // Import the helper functions
-import { getHintsFromString } from '../helpers';
+import { getHintsFromLines } from '../helpers';
 
 // Define the test suite

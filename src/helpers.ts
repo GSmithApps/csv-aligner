@@ -1,6 +1,6 @@
 
-// import getColumnWidthsFromLines from './getColumnWidthsFromLines';
-import { getColumnWidthsFromLines } from './getColumnWidthsFromLines';
+
+
 import { getHintAndCurrentPosfromCol, VsCodeInlayHintAdapter } from './getHintAndCurrentPosfromCol';
 
 /**
@@ -19,22 +19,28 @@ import { getHintAndCurrentPosfromCol, VsCodeInlayHintAdapter } from './getHintAn
  * - find the max length of each column
  * - for each item in the grid, get the hint
  */
-export function getHintsFromString(stringFromDoc: string): VsCodeInlayHintAdapter[] {
-  
-    const lines = stringFromDoc.split('\n');
+export function getHintsFromLines(
+  cellLengths: number[][],
+  columnMaxWidths: number[],
+  delimiterLength: number,
+  hintCharacter: string
+): VsCodeInlayHintAdapter[] {
     
-    // Calculate the maximum width of each column
-    const columnWidths: number[] = getColumnWidthsFromLines(lines, ',');
-
     const hints: VsCodeInlayHintAdapter[] = [];
   
     // Create inlay hints for each line
-    lines.forEach((line, rowIndex) => {
-      const columns = line.split(',');
+    cellLengths.forEach((rowOfCellLengths, rowIndex) => {
       let currentPos = 0;
   
-      columns.forEach((col, colIndex) => {
-          const returns: [VsCodeInlayHintAdapter, number] = getHintAndCurrentPosfromCol(col, columnWidths[colIndex], currentPos, rowIndex);
+      rowOfCellLengths.forEach((cellLength, colIndex) => {
+          const returns: [VsCodeInlayHintAdapter, number] = getHintAndCurrentPosfromCol(
+            cellLength,
+            columnMaxWidths[colIndex],
+            currentPos,
+            rowIndex,
+            delimiterLength,
+            hintCharacter,
+          );
           hints.push(returns[0]);
           currentPos = returns[1];
   

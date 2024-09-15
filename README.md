@@ -1,4 +1,4 @@
-> ⚠️ Warning! This extension needs the October 2024 VSCode release. ⚠️ 
+⚠️ **Warning! This extension needs the October 2024 VSCode release.** ⚠️ 
 
 This is an extension for vscode that uses the inlay hints to
 render csvs as columns.  For example: a csv like

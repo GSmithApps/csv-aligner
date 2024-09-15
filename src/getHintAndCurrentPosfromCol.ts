@@ -38,18 +38,25 @@ export interface VsCodeInlayHintAdapter {
 }
 
 
-export function getHintAndCurrentPosfromCol(col: string, colWidth: number, currentPos: number, rowIndex: number): [VsCodeInlayHintAdapter, number] {
-    const startPos = currentPos + col.length;
-    const spacesNeeded = colWidth - col.length;
+export function getHintAndCurrentPosfromCol(
+  cellLength: number,
+  colMaxWidth: number,
+  currentPos: number,
+  rowIndex: number,
+  delimiterLength: number,
+  hintCharacter: string,
+): [VsCodeInlayHintAdapter, number] {
+    const startPos = currentPos + cellLength;
+    const spacesNeeded = colMaxWidth - cellLength;
     const position: VsCodePositionAdapter = {rowIndex: rowIndex, startPos: startPos};
 
     // Add spaces as an inlay hint
     const hint: VsCodeInlayHintAdapter = {
       position: position,
-      label: ' '.repeat(spacesNeeded),
+      label: hintCharacter.repeat(spacesNeeded),
       //vscode.InlayHintKind.Other
     };
-    currentPos = startPos + 1; // Move past the comma
+    currentPos = startPos + delimiterLength; // Move past the delimiter
 
     return [hint, currentPos];
 }

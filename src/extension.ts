@@ -3,8 +3,13 @@
 import * as vscode from 'vscode';
 
 // import helper function from helpers.ts
-import { getHintsFromString } from './helpers';
+import { getHintsFromLines as getHintsFromCellLengths } from './helpers';
 import { VsCodeInlayHintAdapter } from './getHintAndCurrentPosfromCol';
+import { CSVParse } from './csvParser';
+
+// import getColumnWidthsFromLines from './getColumnWidthsFromLines';
+import { getColumnWidthsFromLines as getMaxColumnWidthsFromCellLengths } from './getColumnWidthsFromLines';
+
 
 
 // This method is called when your extension is activated
@@ -24,16 +29,42 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
     token: vscode.CancellationToken
   ): vscode.InlayHint[] {
 
+    const delimiter = ','
+    const hintCharacter = ' '
+
     // Read the entire document and split it into rows
     const stringFromDoc = document.getText(range);
 
-    // Return the inlay hints
-    const hints: VsCodeInlayHintAdapter[] = getHintsFromString(stringFromDoc);
+    // csv parsing
+    const rowsOfCells = CSVParse(stringFromDoc, delimiter)
 
-    return hints.map(hint => new vscode.InlayHint(new vscode.Position(hint.position.rowIndex, hint.position.startPos), hint.label));
+    // convert cells to just their lengths
+    const cellLengths = rowsOfCells.map(
+      rowOfCells => (
+        rowOfCells.map(cell => cell.length)
+      )
+    )
+
+    // actual business logic
+
+    const maxColumnWidths: number[] = getMaxColumnWidthsFromCellLengths(cellLengths);
+
+    const hints: VsCodeInlayHintAdapter[] = getHintsFromCellLengths(
+      cellLengths,
+      maxColumnWidths,
+      delimiter.length,
+      hintCharacter
+    );
+
+    return hints.map(hint => new vscode.InlayHint(
+      new vscode.Position(hint.position.rowIndex, hint.position.startPos),
+      hint.label)
+    );
 
   }
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+

@@ -1,12 +1,13 @@
 
-export function getColumnWidthsFromLines(lines: string[], delimiter: string): number[] {
+export function getColumnWidthsFromLines(
+  cellLengths: number[][]
+): number[] {
     const columnWidths: number[] = [];
   
-    for (const line of lines) {
-      const columns = line.split(delimiter);
-      columns.forEach((col, i) => {
-        const length = col.length;
-        columnWidths[i] = Math.max(columnWidths[i] || 0, length);
+    for (const rowOfCellLengths of cellLengths) {
+
+      rowOfCellLengths.forEach((cellLength, i) => {
+        columnWidths[i] = Math.max(columnWidths[i] || 0, cellLength);
       });
     }
   
