@@ -2,9 +2,9 @@
   "name": "csv-aligner",
   "displayName": "csv-aligner",
   "description": "aligns csvs using inlay hints",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "engines": {
-    "vscode": "^1.94.0"
+    "vscode": "^1.93.0"
   },
   "categories": [
     "Other"
@@ -21,8 +21,13 @@
     "languages": [
       {
         "id": "csv",
-        "aliases": ["CSV", "csv"],
-        "extensions": [".csv"]
+        "aliases": [
+          "CSV",
+          "csv"
+        ],
+        "extensions": [
+          ".csv"
+        ]
       }
     ],
     "inlayHints": [
@@ -42,14 +47,14 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.94.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.93.0",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.8",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
   }
 }
