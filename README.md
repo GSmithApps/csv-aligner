@@ -3,7 +3,6 @@ render csvs as columns.
 
 ![git](csv-aligner1.gif)
 
-> ⚠️ **Warning! This extension needs the October 2024 VSCode release.** ⚠️ 
 
 **Tip: We recommend that this is used with the rainbow csv extension, which will color the columns.**
 
@@ -26,6 +25,12 @@ d-train,mochi ,hi     ,1   ,kitten
 ## [To Do / Known Issues](https://github.com/GSmithApps/csv-aligner/issues)
 
 ## Release Notes
+
+### 0.0.8
+
+VSCode was updated and the
+default inlay hint truncation
+was removed
 
 ### 0.0.7
 
