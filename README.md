@@ -26,6 +26,10 @@ d-train,mochi ,hi     ,1   ,kitten
 
 ## Release Notes
 
+### 0.0.9
+
+Experimenting with CICD in github.
+
 ### 0.0.8
 
 VSCode was updated and the
