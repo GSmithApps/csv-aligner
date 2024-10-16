@@ -4,7 +4,6 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.vsce
     pkgs.nodejs_20
-    pkgs.typescript
   ];
 }
 
