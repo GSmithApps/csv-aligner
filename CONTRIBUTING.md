@@ -12,6 +12,5 @@ Please contribute! We have some [open issues](https://github.com/GSmithApps/csv-
 - **vsce**: need this to package and push to vs code market.
 
 You can just install
-the two globally, or you can use direnv and nix.
+the two globally, or you can use nix and direnv.
 This is done with **shell.nix** and **.envrc**.
-
