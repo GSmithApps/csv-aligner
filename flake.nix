@@ -11,6 +11,11 @@
           vsce
           nodejs_20
         ];
+        shellHook = ''
+          echo "Welcome to the CSV-aligner development environment!"
+          echo "Node.js version: $(node --version)"
+          echo "vsce version: $(vsce --version)"
+        '';
       };
     };
 }
