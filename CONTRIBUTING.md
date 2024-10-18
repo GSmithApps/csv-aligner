@@ -28,3 +28,8 @@ using github actions. The workflow is in **.github/workflows/main.yml**.
 To do this, just push a tag to the repo
 with `vX.X.X` and the github action will
 run the tests, package the extension, and push it to the marketplace.
+
+# Links
+
+- https://marketplace.visualstudio.com/manage/publishers/grantsmith
+- https://dev.azure.com/14gsmith14/
