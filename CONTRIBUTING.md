@@ -13,7 +13,7 @@ Please contribute! We have some [open issues](https://github.com/GSmithApps/csv-
 
 You can just install
 the two globally, or you can use nix and direnv.
-This is done with **shell.nix** and **.envrc**.
+This is done with **flake.nix** and **.envrc**.
 
 # Making Changes
 
