@@ -15,6 +15,11 @@ You can just install
 the two globally, or you can use nix and direnv.
 This is done with **shell.nix** and **.envrc**.
 
+# Making Changes
+
+1. Update the changelog in README.md.
+2. Update the version in package.json.
+
 # CICD
 
 The code is packaged and pushed to the marketplace

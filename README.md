@@ -25,9 +25,16 @@ d-train,mochi ,hi     ,1   ,kitten
 ## [To Do / Known Issues](https://github.com/GSmithApps/csv-aligner/issues)
 
 - [It doesn't handle separators other than commas](https://github.com/GSmithApps/csv-aligner/issues/3)
-- [It doesn't use a proper csv parser, so it can't handle things like commas in cell values](https://github.com/GSmithApps/csv-aligner/issues/1)
 
 ## Release Notes
+
+### 0.1.0
+
+Solved [top issue](https://github.com/GSmithApps/csv-aligner/issues/1),
+we think it's working with commas in cell values now.
+
+It doesn't seem to handle different separators very well.
+That's in progress.
 
 ### 0.0.9
 
