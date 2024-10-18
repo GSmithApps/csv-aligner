@@ -2,13 +2,12 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-import { CSVParse } from './csvParser';
+import { CSVParse, parseCSVWithPapa, CsvData } from './csvParser';
 
 // import helper functions
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
 import { VsCodeInlayHintAdapter } from './helpers/getHintAndCurrentPosfromCol';
 import { getMaxColumnWidthsFromCellLengths } from './helpers/getMaxColumnWidthsFromCellLengths';
-
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -27,42 +26,43 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
     token: vscode.CancellationToken
   ): vscode.InlayHint[] {
 
-    const delimiter = ',';
     const hintCharacter = ' ';
 
+    console.log('provideInlayHints called');
+    
     // Read the entire document and split it into rows
     const stringFromDoc = document.getText(range);
-
-    // csv parsing
-    const rowsOfCells = CSVParse(stringFromDoc, delimiter);
-
-    // convert cells to just their lengths
-    const cellLengths = rowsOfCells.map(
-      rowOfCells => (
-        rowOfCells.map(cell => cell.length)
-      )
-    );
+    
+    console.log('text received');
+    const {
+      data: rowsOfCellLengthArrays,
+      delimiter: delimiter,
+    }: CsvData = parseCSVWithPapa(stringFromDoc);
 
     // actual business logic
 
-    const maxColumnWidths: number[] = getMaxColumnWidthsFromCellLengths(cellLengths);
+    const maxColumnWidths: number[] = getMaxColumnWidthsFromCellLengths(rowsOfCellLengthArrays);
 
     const hints: VsCodeInlayHintAdapter[] = getHintsFromCellLengths(
-      cellLengths,
+      rowsOfCellLengthArrays,
       maxColumnWidths,
       delimiter.length,
       hintCharacter
     );
 
-    return hints.map(hint => new vscode.InlayHint(
+    const vsCodeHints = hints.map(hint => new vscode.InlayHint(
       new vscode.Position(hint.position.rowIndex, hint.position.startPos),
       hint.label)
     );
+
+    return vsCodeHints;
 
   }
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() { 
+  console.log('deactivated');
+}
 
 
