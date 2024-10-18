@@ -1,7 +1,7 @@
 A VSCode extension that uses the inlay hints to
 render csvs as columns.
 
-![git](csv-aligner1.gif)
+![git](images/csv-aligner1.gif)
 
 
 **Tip: We recommend that this is used with the rainbow csv extension, which will color the columns.**
@@ -23,6 +23,9 @@ d-train,mochi ,hi     ,1   ,kitten
 
 
 ## [To Do / Known Issues](https://github.com/GSmithApps/csv-aligner/issues)
+
+- [It doesn't handle separators other than commas](https://github.com/GSmithApps/csv-aligner/issues/3)
+- [It doesn't use a proper csv parser, so it can't handle things like commas in cell values](https://github.com/GSmithApps/csv-aligner/issues/1)
 
 ## Release Notes
 

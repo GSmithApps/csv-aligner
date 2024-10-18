@@ -14,3 +14,12 @@ Please contribute! We have some [open issues](https://github.com/GSmithApps/csv-
 You can just install
 the two globally, or you can use nix and direnv.
 This is done with **shell.nix** and **.envrc**.
+
+# CICD
+
+The code is packaged and pushed to the marketplace
+using github actions. The workflow is in **.github/workflows/main.yml**.
+
+To do this, just push a tag to the repo
+with `vX.X.X` and the github action will
+run the tests, package the extension, and push it to the marketplace.
