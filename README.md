@@ -1,6 +1,10 @@
 A VSCode extension that uses the inlay hints to
 render csvs as columns.
 
+> ⚠️ Warning: This is a very early version of the extension.
+> It doesn't work well with files that take more than one screen.
+> Please see issues below.
+
 ![git](images/csv-aligner1.gif)
 
 
@@ -28,6 +32,7 @@ d-train,mochi ,hi     ,1   ,kitten
 
 ## [To Do / Known Issues](https://github.com/GSmithApps/csv-aligner/issues)
 
+- [It works really poorly on files that take more than one screen](https://github.com/GSmithApps/csv-aligner/issues/5)
 - [It doesn't handle separators other than commas](https://github.com/GSmithApps/csv-aligner/issues/3)
 
 ## Release Notes
@@ -67,6 +72,11 @@ Lol put in an icon.
 Learned that VSCode October 2024 release fixes the inlay hint truncation.
 See [VSCode issue 205708](https://github.com/microsoft/vscode/issues/205708).
 
+
+## Contributors
+
+- Big thanks to [Noé SELLAM](https://github.com/GDGiantDwarf)
+  for logging the first issue!
 
 ## Support
 
