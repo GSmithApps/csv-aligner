@@ -19,6 +19,7 @@ This is done with **flake.nix** and **.envrc**.
 
 1. Update the changelog in README.md.
 2. Update the version in package.json.
+3. Push a tag, as described below.
 
 # CICD
 

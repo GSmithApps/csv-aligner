@@ -20,13 +20,21 @@ grant  ,murphy,whaddup,1234,dog
 d-train,mochi ,hi     ,1   ,kitten
 ```
 
+## Features
 
+### Deleting Columns
+
+![deleting columns](images/deleting-columns.gif)
 
 ## [To Do / Known Issues](https://github.com/GSmithApps/csv-aligner/issues)
 
 - [It doesn't handle separators other than commas](https://github.com/GSmithApps/csv-aligner/issues/3)
 
 ## Release Notes
+
+### 0.1.1
+
+- Added a gif and features section to the readme.
 
 ### 0.1.0
 
