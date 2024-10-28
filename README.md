@@ -76,7 +76,7 @@ See [VSCode issue 205708](https://github.com/microsoft/vscode/issues/205708).
 ## Contributors
 
 - Big thanks to [Noé SELLAM](https://github.com/GDGiantDwarf)
-  for logging the first issue!
+  for filing the first issue!!
 
 ## Support
 
