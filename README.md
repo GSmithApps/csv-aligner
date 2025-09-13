@@ -26,8 +26,9 @@ d-train,mochi ,hi     ,1   ,kitten
 
 ![deleting columns](images/deleting-columns.gif)
 
-## [To Do / Known Issues](https://github.com/GSmithApps/csv-aligner/issues)
+## To Do / Known Issues
 
+- [The GH Issues](https://github.com/GSmithApps/csv-aligner/issues)
 - [It doesn't handle separators other than commas](https://github.com/GSmithApps/csv-aligner/issues/3)
 - If the CSV appears to render poorly like shown in [this issue](https://github.com/GSmithApps/csv-aligner/issues/5),
   please put the following into your user settings JSON config.

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CSVParse, parseCSVWithPapa, CsvData } from './csvParser';
+import { parseCSVWithPapa, CsvData } from './csvParser';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
 import { VsCodeInlayHintAdapter } from './helpers/getHintAndCurrentPosfromCol';
 import { getMaxColumnWidthsFromCellLengths } from './helpers/getMaxColumnWidthsFromCellLengths';
@@ -29,7 +29,7 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
     ): vscode.Range {
         // Always include the header (first line)
         const headerLine = 0;
-        
+
         // Calculate the range of lines to process
         const startLine = Math.max(1, visibleRange.start.line - BUFFER_LINES_ABOVE);
         const endLine = Math.min(
@@ -66,8 +66,8 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         const visibleText = document.getText(effectiveRange);
 
         // Parse the header and visible text
-        const headerData = parseCSVWithPapa(headerText);
-        const visibleData = parseCSVWithPapa(visibleText);
+        const headerData: CsvData = parseCSVWithPapa(headerText);
+        const visibleData: CsvData = parseCSVWithPapa(visibleText);
 
         if (!headerData.data.length || !visibleData.data.length) {
             return [];

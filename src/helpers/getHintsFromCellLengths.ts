@@ -16,13 +16,13 @@ export function getHintsFromCellLengths(
   delimiterLength: number,
   hintCharacter: string
 ): VsCodeInlayHintAdapter[] {
-    
+
     const hints: VsCodeInlayHintAdapter[] = [];
-  
+
     // Create inlay hints for each line
     cellLengths.forEach((rowOfCellLengths, rowIndex) => {
       let currentPos = 0;
-  
+
       rowOfCellLengths.forEach((cellLength, colIndex) => {
           const returns: [VsCodeInlayHintAdapter, number] = getHintAndCurrentPosfromCol(
             cellLength,
@@ -34,10 +34,10 @@ export function getHintsFromCellLengths(
           );
           hints.push(returns[0]);
           currentPos = returns[1];
-  
+
       });
     });
-  
+
     return hints;
   }
 
