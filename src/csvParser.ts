@@ -20,7 +20,7 @@ import Papa from 'papaparse';
 */
 export interface CsvData {
     data: number[][];
-    delimiter: string;
+    delimiterLength: number;
 }
 
 
@@ -69,6 +69,6 @@ export  function parseCSVWithPapa(csv: string): CsvData {
     console.log("Value lengths per row:", valueLengths);
 
     // `result.data` contains the parsed array of arrays
-    return {data: valueLengths, delimiter: delimiter};
+    return {data: valueLengths, delimiterLength: delimiter.length};
 }
 

@@ -73,24 +73,24 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         const visibleText = document.getText(effectiveRange);
 
         // Parse the header and visible text
-        const headerData: CsvData = parseCSVWithPapa(headerText);
-        const visibleData: CsvData = parseCSVWithPapa(visibleText);
+        const {data : headerData} = parseCSVWithPapa(headerText);
+        const {data: visibleData, delimiterLength} = parseCSVWithPapa(visibleText);
 
-        if (!headerData.data.length || !visibleData.data.length) {
+        if (!headerData.length || !visibleData.length) {
             return [];
         }
 
         // Combine header with visible data, avoiding duplication if header is in visible range
         const combinedRows = (effectiveRange.start.line === 0)
-            ? visibleData.data
-            : [headerData.data[0], ...visibleData.data];
+            ? visibleData
+            : [headerData[0], ...visibleData];
 
         // Calculate max column widths and generate hints
         const maxColumnWidths = getMaxColumnWidthsFromCellLengths(combinedRows);
         const hints: VsCodeInlayHintAdapter[] = getHintsFromCellLengths(
             combinedRows,
             maxColumnWidths,
-            visibleData.delimiter.length,
+            delimiterLength,
             hintCharacter
         );
 
