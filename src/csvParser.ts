@@ -1,3 +1,12 @@
+/**
+ * This parses the portion of the CSV that's in the user's view
+ * (plus the header, plus some buffer).
+ * 
+ * It's called by extension.ts.
+ *
+ * @packageDocumentation
+ */
+
 import Papa from 'papaparse';
 
 /**

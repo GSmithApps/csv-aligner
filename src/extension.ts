@@ -1,3 +1,10 @@
+/**
+ * This is basically the stuff that interfaces with VScode.
+ * It calls out to the helpers and the parser.
+ *
+ * @packageDocumentation
+ */
+
 import * as vscode from 'vscode';
 import { parseCSVWithPapa, CsvData } from './csvParser';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
