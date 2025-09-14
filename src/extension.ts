@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { parseCSVWithPapa, CsvData } from './csvParser';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
-import { VsCodeInlayHintAdapter } from './helpers/getHintAndCurrentPosfromCol';
+import { VsCodeInlayHintAdapter, VsCodePositionAdapter } from './helpers/getHintAndCurrentPosfromCol';
 import { getMaxColumnWidthsFromCellLengths } from './helpers/getMaxColumnWidthsFromCellLengths';
 
 // Constants for buffer sizes
@@ -90,7 +90,7 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         // Convert to VSCode InlayHints and filter for visible range
         return hints
             .filter(hint => {
-                const lineNum = hint.position.rowIndex;
+                const lineNum = (hint.position as VsCodePositionAdapter).rowIndex;
                 return (
                     lineNum === 0 || // Always include header row hints
                     (lineNum >= effectiveRange.start.line && lineNum <= effectiveRange.end.line)

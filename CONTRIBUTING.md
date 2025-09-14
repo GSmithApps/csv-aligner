@@ -15,6 +15,12 @@ You can just install
 the two globally, or you can use nix and direnv.
 This is done with **flake.nix** and **.envrc**.
 
+# Viewing Docs
+
+You can see the docs if you open docs/index.html.
+If you updated something and want to regenerate the docs, you
+can run `npm run doc`.
+
 # Running/Debugging
 
 Just go to the vscode run/debug menu and click the play button.

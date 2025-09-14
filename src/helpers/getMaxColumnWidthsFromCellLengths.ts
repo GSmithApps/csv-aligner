@@ -1,8 +1,6 @@
 
 /**
- * @file This file contains helper functions for parsing CSV data.
- * @author Grant Smith
- * @version 1.0.0
+ * some stuff at the top
  */
 
 /**

@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 
 /**
  * The output type of the ParseCSVWithPapa function.
- * @description It has the string length of all the data in the csv, and it
+ * It has the string length of all the data in the csv, and it
  * has the delimiter of the csv
  * @property {number[][]} data - the string length of all the data in the csv.
  * I believe it's matrix notation, so the first index is the row number, and the second

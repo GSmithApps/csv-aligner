@@ -13,7 +13,7 @@
  * const position: vscode.Position = new vscode.Position(newPosition.rowIndex, newPosition.startPos);
  * ```
  */
-interface VsCodePositionAdapter {
+export interface VsCodePositionAdapter {
   rowIndex: number;
   startPos: number;
 }
