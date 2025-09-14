@@ -44,7 +44,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "doc": "typedoc --out docs --entryPointStrategy expand src"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
@@ -56,6 +57,7 @@
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.57.0",
+    "typedoc": "^0.28.12",
     "typescript": "^5.3.3"
   },
   "dependencies": {
