@@ -28,6 +28,12 @@ as mentioned in the README
 }
 ```
 
+# Running tests
+
+There's one test, and it came with the extension when the vs-code
+tooling gave me the initial code. I don't really know how to run it,
+but I think it's some sort of integration test.
+
 # Making Changes
 
 1. Update the changelog in README.md.
