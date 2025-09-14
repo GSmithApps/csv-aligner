@@ -16,6 +16,7 @@ const BUFFER_LINES_ABOVE = 10;
 const BUFFER_LINES_BELOW = 10;
 
 export function activate(context: vscode.ExtensionContext) {
+    console.log('got to the activate function')
     context.subscriptions.push(
         vscode.languages.registerInlayHintsProvider('csv', new CsvAlignInlayHintsProvider())
     );
@@ -73,8 +74,13 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         const visibleText = document.getText(effectiveRange);
 
         // Parse the header and visible text
-        const {data : headerData} = parseCSVWithPapa(headerText);
-        const {data: visibleData, delimiterLength} = parseCSVWithPapa(visibleText);
+        const [
+            {data: headerData}, 
+            {data: visibleData, delimiterLength}
+        ] = await Promise.all([
+            parseCSVWithPapa(headerText),
+            parseCSVWithPapa(visibleText)
+        ]);
 
         if (!headerData.length || !visibleData.length) {
             return [];
