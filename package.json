@@ -10,8 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:csv",
-    "onLanguage:tsv"
+    "onLanguage:csv"
   ],
   "repository": {
     "type": "git",
@@ -23,20 +22,12 @@
     {
       "id": "csv",
       "aliases": ["CSV", "csv"],
-      "extensions": [".csv"]
-    },
-    {
-      "id": "tsv",
-      "aliases": ["TSV", "tsv"],
-      "extensions": [".tsv"]
+      "extensions": [".csv", ".tsv"]
     }
   ],
   "inlayHints": [
     {
       "language": "csv"
-    },
-    {
-      "language": "tsv"
     }
   ]
   },
