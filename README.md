@@ -41,6 +41,15 @@ d-train,mochi ,hi     ,1   ,kitten
 
 ## Release Notes
 
+
+### 0.3.1
+
+- mistyped a version number
+
+### 0.3.0
+
+- I _believe_ it works for other delimiters and .tsv files now
+
 ### 0.2.0
 
 - It works for bigger files now

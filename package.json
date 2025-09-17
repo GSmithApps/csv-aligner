@@ -2,7 +2,7 @@
   "name": "csv-aligner",
   "displayName": "csv-aligner",
   "description": "aligns csvs using inlay hints",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "engines": {
     "vscode": "^1.94.0"
   },
