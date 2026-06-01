@@ -66,3 +66,6 @@ run the tests, package the extension, and push it to the marketplace.
   into an npm package, so rainbow CSV could use it too. And I think
   that's why I didn't want to use the vs code extension in there... cuz
   if it's an npm package, I didn't really want to depend on vscode
+- The thing I really need to do is get constant.csv to render
+  properly. There's [an active github issue](https://github.com/GSmithApps/csv-aligner/issues/5)
+  about it.
