@@ -7,8 +7,13 @@
 
 import * as vscode from 'vscode';
 import { parseCSVWithPapa } from './csvParser';
+import {
+    getBufferedBodyLineRange,
+    getDocumentLineFromCombinedRowIndex,
+    type LineRange,
+} from './helpers/getBufferedBodyLineRange';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
-import { VsCodeInlayHintAdapter, VsCodePositionAdapter } from './helpers/getHintAndCurrentPosfromCol';
+import { VsCodeInlayHintAdapter } from './helpers/getHintAndCurrentPosfromCol';
 import { getMaxColumnWidthsFromCellLengths } from './helpers/getMaxColumnWidthsFromCellLengths';
 
 // Constants for buffer sizes
@@ -30,23 +35,16 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         return visibleRanges[0];
     }
 
-    private getEffectiveRange(
+    private getBodyLineRange(
         document: vscode.TextDocument,
         visibleRange: vscode.Range
-    ): vscode.Range {
-        // Always include the header (first line)
-        const headerLine = 0;
-
-        // Calculate the range of lines to process
-        const startLine = Math.max(1, visibleRange.start.line - BUFFER_LINES_ABOVE);
-        const endLine = Math.min(
-            document.lineCount - 1,
-            visibleRange.end.line + BUFFER_LINES_BELOW
-        );
-
-        return new vscode.Range(
-            headerLine, 0,  // Start from the header
-            endLine, document.lineAt(endLine).text.length
+    ): LineRange | undefined {
+        return getBufferedBodyLineRange(
+            document.lineCount,
+            visibleRange.start.line,
+            visibleRange.end.line,
+            BUFFER_LINES_ABOVE,
+            BUFFER_LINES_BELOW
         );
     }
 
@@ -63,52 +61,48 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
             return [];
         }
 
-        // Get the visible range and calculate the effective range
+        // Get the visible range and calculate the buffered body range.
         const visibleRange = this.getVisibleRange(editor);
-        const effectiveRange = this.getEffectiveRange(document, visibleRange);
+        const bodyLineRange = this.getBodyLineRange(document, visibleRange);
 
-        // Get text for the header and visible range separately
         const headerText = document.lineAt(0).text;
-        const visibleText = document.getText(effectiveRange);
+        const bodyText = bodyLineRange === undefined
+            ? undefined
+            : document.getText(new vscode.Range(
+                bodyLineRange.startLine,
+                0,
+                bodyLineRange.endLine,
+                document.lineAt(bodyLineRange.endLine).text.length
+            ));
+        const textToParse = bodyText === undefined
+            ? headerText
+            : `${headerText}\n${bodyText}`;
 
-        // Parse the header and visible text
-        const [
-            {data: headerData}, 
-            {data: visibleData, delimiterLength}
-        ] = await Promise.all([
-            parseCSVWithPapa(headerText),
-            parseCSVWithPapa(visibleText)
-        ]);
+        const {data: cellLengths, delimiterLength} = await parseCSVWithPapa(textToParse);
 
-        if (!headerData.length || !visibleData.length) {
+        if (!cellLengths.length) {
             return [];
         }
 
-        // Combine header with visible data, avoiding duplication if header is in visible range
-        const combinedRows = (effectiveRange.start.line === 0)
-            ? visibleData
-            : [headerData[0], ...visibleData];
-
         // Calculate max column widths and generate hints
-        const maxColumnWidths = getMaxColumnWidthsFromCellLengths(combinedRows);
+        const maxColumnWidths = getMaxColumnWidthsFromCellLengths(cellLengths);
         const hints: VsCodeInlayHintAdapter[] = getHintsFromCellLengths(
-            combinedRows,
+            cellLengths,
             maxColumnWidths,
             delimiterLength,
             hintCharacter
         );
 
-        // Convert to VSCode InlayHints and filter for visible range
+        // Convert local parsed row indexes back to real document lines.
         return hints
-            .filter(hint => {
-                const lineNum = (hint.position as VsCodePositionAdapter).rowIndex;
-                return (
-                    lineNum === 0 || // Always include header row hints
-                    (lineNum >= effectiveRange.start.line && lineNum <= effectiveRange.end.line)
-                );
-            })
             .map(hint => new vscode.InlayHint(
-                new vscode.Position(hint.position.rowIndex, hint.position.startPos),
+                new vscode.Position(
+                    getDocumentLineFromCombinedRowIndex(
+                        hint.position.rowIndex,
+                        bodyLineRange?.startLine ?? 1
+                    ),
+                    hint.position.startPos
+                ),
                 hint.label
             ));
     }
