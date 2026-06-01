@@ -6,7 +6,7 @@
  */
 
 import * as vscode from 'vscode';
-import { parseCSVWithPapa, CsvData } from './csvParser';
+import { parseCSVWithPapa } from './csvParser';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
 import { VsCodeInlayHintAdapter, VsCodePositionAdapter } from './helpers/getHintAndCurrentPosfromCol';
 import { getMaxColumnWidthsFromCellLengths } from './helpers/getMaxColumnWidthsFromCellLengths';

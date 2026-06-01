@@ -32,14 +32,12 @@ export interface CsvData {
  */
 export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
     // Parse the CSV and wait for Papa to finish
-    const { data, meta } = await new Promise<Papa.ParseResult<string[]>>((resolve) => {
-        Papa.parse<string[]>(csv, {
-            delimiter: "", // Let Papa auto-detect
-            complete: resolve
-        });
+    const { meta: { delimiter } } = await new Promise<Papa.ParseResult<string[]>>((resolve) => {
+    Papa.parse<string[]>(csv, {
+        delimiter: "", // Let Papa auto-detect
+        complete: resolve
     });
-
-    const delimiter = meta.delimiter;
+});
 
     // Step 2: Reconstruct raw text and capture value lengths
     const valueLengths: number[][] = [];
