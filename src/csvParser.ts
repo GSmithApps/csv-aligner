@@ -40,7 +40,6 @@ export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
     });
 
     const delimiter = meta.delimiter;
-    console.log(`delimiter: ${delimiter}`)
 
     // Step 2: Reconstruct raw text and capture value lengths
     const valueLengths: number[][] = [];
@@ -73,4 +72,3 @@ export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
         delimiterLength: delimiter.length
     };
 }
-

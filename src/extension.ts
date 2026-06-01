@@ -16,7 +16,6 @@ const BUFFER_LINES_ABOVE = 10;
 const BUFFER_LINES_BELOW = 10;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('got to the activate function')
     context.subscriptions.push(
         vscode.languages.registerInlayHintsProvider('csv', new CsvAlignInlayHintsProvider())
     );
@@ -57,7 +56,6 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         token: vscode.CancellationToken
     ): Promise<vscode.InlayHint[]> {
         const hintCharacter = ' ';
-        console.log('provideInlayHints called');
 
         // Get the active editor
         const editor = vscode.window.activeTextEditor;
@@ -117,5 +115,4 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
 }
 
 export function deactivate() {
-    console.log('deactivated');
 }
