@@ -78,7 +78,7 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
             ? headerText
             : `${headerText}\n${bodyText}`;
 
-        const {data: cellLengths, delimiterLength} = await parseCSVWithPapa(textToParse);
+        const {data: cellLengths, rawLengths, delimiterLength} = await parseCSVWithPapa(textToParse);
 
         if (!cellLengths.length) {
             return [];
@@ -88,6 +88,7 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
         const maxColumnWidths = getMaxColumnWidthsFromCellLengths(cellLengths);
         const hints: VsCodeInlayHintAdapter[] = getHintsFromCellLengths(
             cellLengths,
+            rawLengths,
             maxColumnWidths,
             delimiterLength,
             hintCharacter

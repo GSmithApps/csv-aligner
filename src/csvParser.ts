@@ -8,18 +8,19 @@
  */
 
 import Papa from 'papaparse';
+import * as eaw from 'eastasianwidth';
 
 /**
  * The output type of the ParseCSVWithPapa function.
  * It has the string length of all the data in the csv, and it
  * has the delimiter of the csv
- * @property {number[][]} data - the string length of all the data in the csv.
- * I believe it's matrix notation, so the first index is the row number, and the second
- * index is the column number
- * @property {string} delimiter - the delimiter of the csv.
+ * @property {number[][]} data - the display width of all the cells in the csv.
+ * @property {number[][]} rawLengths - the raw character count of all cells, for position tracking.
+ * @property {number} delimiterLength - the length of the delimiter.
 */
 export interface CsvData {
     data: number[][];
+    rawLengths: number[][];
     delimiterLength: number;
 }
 
@@ -41,12 +42,15 @@ export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
 
     // Step 2: Reconstruct raw text and capture value lengths
     const valueLengths: number[][] = [];
+    const rawLengths: number[][] = [];
     const rows = csv.split(/\r?\n/); // Split raw content by newlines
 
     rows.forEach((row) => {
         let inQuotes = false;
         let valueStart = 0;
+        let displayWidth = 0;
         let rowLengths: number[] = [];
+        let rowRawLengths: number[] = [];
 
         for (let i = 0; i < row.length; i++) {
             const char = row[i];
@@ -56,17 +60,26 @@ export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
             }
 
             if (char === delimiter && !inQuotes) {
-                rowLengths.push(i - valueStart);
+                const rawLen = i - valueStart;
+                rowRawLengths.push(rawLen);
+                rowLengths.push(displayWidth);
+                displayWidth = 0;
                 valueStart = i + 1;
+            } else {
+                displayWidth += eaw.characterLength(char);
             }
         }
 
-        rowLengths.push(row.length - valueStart);
+        const rawLen = row.length - valueStart;
+        rowRawLengths.push(rawLen);
+        rowLengths.push(displayWidth);
+        rawLengths.push(rowRawLengths);
         valueLengths.push(rowLengths);
     });
 
     return {
         data: valueLengths,
+        rawLengths: rawLengths,
         delimiterLength: delimiter.length
     };
 }

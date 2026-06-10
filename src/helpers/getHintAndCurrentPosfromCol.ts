@@ -45,13 +45,14 @@ export interface VsCodeInlayHintAdapter {
 
 export function getHintAndCurrentPosfromCol(
   cellLength: number,
+  rawCellLength: number,
   colMaxWidth: number,
   currentPos: number,
   rowIndex: number,
   delimiterLength: number,
   hintCharacter: string,
 ): [VsCodeInlayHintAdapter, number] {
-    const startPos = currentPos + cellLength;
+    const startPos = currentPos + rawCellLength;
     const spacesNeeded = colMaxWidth - cellLength;
     const position: VsCodePositionAdapter = {rowIndex: rowIndex, startPos: startPos};
 

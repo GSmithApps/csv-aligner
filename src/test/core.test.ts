@@ -25,6 +25,7 @@ suite('Core helpers', () => {
 	test('creates an inlay hint at the end of the current cell', () => {
 		const [hint, nextPos] = getHintAndCurrentPosfromCol(
 			5,
+			5,
 			7,
 			0,
 			2,
@@ -41,6 +42,10 @@ suite('Core helpers', () => {
 
 	test('creates hints for every cell length', () => {
 		const hints = getHintsFromCellLengths(
+			[
+				[5, 6, 7],
+				[7, 2, 6],
+			],
 			[
 				[5, 6, 7],
 				[7, 2, 6],
@@ -102,6 +107,10 @@ suite('CSV parser', () => {
 				[5, 6, 4],
 				[7, 5, 1],
 			],
+			rawLengths: [
+				[5, 6, 4],
+				[7, 5, 1],
+			],
 			delimiterLength: 1,
 		});
 	});
@@ -111,6 +120,10 @@ suite('CSV parser', () => {
 
 		assert.deepStrictEqual(parsed, {
 			data: [
+				[15, 1],
+				[7, 1],
+			],
+			rawLengths: [
 				[15, 1],
 				[7, 1],
 			],
@@ -126,6 +139,10 @@ suite('CSV parser', () => {
 				[4, 5],
 				[5, 2],
 			],
+			rawLengths: [
+				[4, 5],
+				[5, 2],
+			],
 			delimiterLength: 1,
 		});
 	});
@@ -135,6 +152,10 @@ suite('CSV parser', () => {
 
 		assert.deepStrictEqual(parsed, {
 			data: [
+				[1, 1, 1],
+				[6, 3],
+			],
+			rawLengths: [
 				[1, 1, 1],
 				[6, 3],
 			],
