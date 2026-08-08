@@ -2,6 +2,18 @@
 .vscode-test/**
 src/**
 .gitignore
+
+# Dev-only stuff. Note that vsce ignores .gitignore entirely once this file
+# exists, so anything gitignored still needs listing here or it ships.
+.claude/**
+.devcontainer/**
+docs/**
+.github/**
+flake.nix
+flake.lock
+.envrc
+CONTRIBUTING.md
+
 .yarnrc
 vsc-extension-quickstart.md
 **/tsconfig.json

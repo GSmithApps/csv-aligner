@@ -41,7 +41,36 @@ d-train,mochi ,hi     ,1   ,kitten
 }
 ```
 
+- If you have that setting in place and a **very wide** CSV (roughly 35+
+  columns) still loses its hints on every row below the first screenful,
+  that's a different problem and the setting won't help. VS Code stops
+  drawing after 1500 inlay hints, and a wide file needs more than that for
+  one screen. There's no workaround from your side yet; see "Why wide files
+  lose their hints" in CONTRIBUTING.md for the details.
+
 ## Release Notes
+
+### 0.4.0
+
+- Column widths are now based on the whole file instead of the rows near
+  your viewport, so a column keeps the same width no matter where you
+  scroll. This reverses the width behavior from 0.3.2, where widths shifted
+  as you scrolled.
+- Widths now shrink back down after you delete a long value, instead of
+  staying wide.
+- The delimiter is detected once per file from a sample of the first lines,
+  rather than by parsing the entire file (which was most of the cost on
+  large CSVs) and rather than being re-guessed for each screenful.
+- Big files use much less memory. The width scan no longer builds a table
+  of every cell in the document, so wide files that previously could
+  exhaust memory now scan in a fraction of a second.
+- Widths are cached per file and recomputed only when you edit, so
+  scrolling doesn't rescan.
+- Known limitation, unchanged by this release: on very wide CSVs (roughly
+  35+ columns) the rows below the first screenful lose their hints
+  entirely. VS Code silently stops drawing after 1500 inlay hints. See
+  "Why wide files lose their hints" in CONTRIBUTING.md, and
+  [issue 5](https://github.com/GSmithApps/csv-aligner/issues/5).
 
 ### 0.3.2
 
