@@ -49,6 +49,27 @@ export interface CsvData {
 }
 
 /**
+ * Ask Papa to guess the delimiter, using only a sample of the csv.
+ *
+ * This is split out so callers who want the delimiter but not the cell
+ * lengths -- like the whole-file column width scan -- don't have to run a
+ * parse they'll throw away. It also means everything can agree on one
+ * delimiter for a document instead of re-guessing per chunk of text.
+ * @param csv takes in the csv data as a string
+ * @returns the delimiter
+ */
+export async function detectDelimiter(csv: string): Promise<string> {
+    const { meta: { delimiter } } = await new Promise<Papa.ParseResult<string[]>>((resolve) => {
+    Papa.parse<string[]>(getDelimiterSample(csv), {
+        delimiter: "", // Let Papa auto-detect
+        complete: resolve
+    });
+});
+
+    return delimiter;
+}
+
+/**
  * Takes the csv as a string, then parses it to get
  * the strength length in each cell, and it also returns the length
  * of the delimiter.
@@ -56,15 +77,9 @@ export interface CsvData {
  * @returns the length of all the cells in the data, and the delimiter length
  */
 export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
-    // Parse a sample of the CSV and wait for Papa to finish.
-    // We only use this for the delimiter -- the cell lengths come from
+    // We only need Papa for the delimiter -- the cell lengths come from
     // the scan below, over the full input.
-    const { meta: { delimiter } } = await new Promise<Papa.ParseResult<string[]>>((resolve) => {
-    Papa.parse<string[]>(getDelimiterSample(csv), {
-        delimiter: "", // Let Papa auto-detect
-        complete: resolve
-    });
-});
+    const delimiter = await detectDelimiter(csv);
 
     // Step 2: Reconstruct raw text and capture value lengths
     const valueLengths: number[][] = [];

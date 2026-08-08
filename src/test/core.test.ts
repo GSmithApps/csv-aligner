@@ -1,15 +1,21 @@
 /// <reference types="mocha" />
 
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { parseCSVWithPapa } from '../csvParser';
+import { detectDelimiter, parseCSVWithPapa } from '../csvParser';
 import {
 	getBufferedBodyLineRange,
 	getDocumentLineFromCombinedRowIndex,
 } from '../helpers/getBufferedBodyLineRange';
+import { getColumnMaxWidthsFromText } from '../helpers/getColumnMaxWidthsFromText';
 import { getHintAndCurrentPosfromCol } from '../helpers/getHintAndCurrentPosfromCol';
 import { getHintsFromCellLengths } from '../helpers/getHintsFromCellLengths';
 import { getMaxColumnWidthsFromCellLengths } from '../helpers/getMaxColumnWidthsFromCellLengths';
+
+// This file compiles to out/test, and the csvs stay put in src/test.
+const TEST_CSV_DIR = path.resolve(__dirname, '../../src/test/test-csvs');
 
 suite('Core helpers', () => {
 	test('gets max width for each column', () => {
@@ -58,6 +64,66 @@ suite('Core helpers', () => {
 			{ position: { rowIndex: 1, startPos: 10 }, label: '....' },
 			{ position: { rowIndex: 1, startPos: 17 }, label: '.' },
 		]);
+	});
+});
+
+suite('Whole-text column widths', () => {
+	test('gets the widest cell in each column', () => {
+		const widths = getColumnMaxWidthsFromText(
+			'name,count\nmochi,12\nd-train,1',
+			',',
+		);
+
+		assert.deepStrictEqual(widths, [7, 5]);
+	});
+
+	test('does not split on delimiters inside quoted cells', () => {
+		const widths = getColumnMaxWidthsFromText(
+			'"hello, friend",x\nshorter,y',
+			',',
+		);
+
+		assert.deepStrictEqual(widths, [15, 1]);
+	});
+
+	test('handles rows with different column counts', () => {
+		const widths = getColumnMaxWidthsFromText('a,b,c\nlonger,row', ',');
+
+		assert.deepStrictEqual(widths, [6, 3, 1]);
+	});
+
+	test('ignores the carriage return in crlf files', () => {
+		const widths = getColumnMaxWidthsFromText('name,count\r\nmochi,12\r\n', ',');
+
+		assert.deepStrictEqual(widths, [5, 5]);
+	});
+
+	test('works with a tab delimiter', () => {
+		const widths = getColumnMaxWidthsFromText('name\tcount\nmochi\t12', '\t');
+
+		assert.deepStrictEqual(widths, [5, 5]);
+	});
+
+	// The whole point of this helper is to replace the parse-then-reduce
+	// pipeline for the full document, so the two had better agree. If one of
+	// these ever fails, the widths and the hint positions have drifted apart
+	// and the alignment will be visibly wrong.
+	suite('agrees with the existing parse-then-reduce pipeline', () => {
+		for (const fileName of fs.readdirSync(TEST_CSV_DIR)) {
+			test(fileName, async () => {
+				const text = fs.readFileSync(path.join(TEST_CSV_DIR, fileName), 'utf8');
+				const delimiter = await detectDelimiter(text);
+
+				const viaMatrix = getMaxColumnWidthsFromCellLengths(
+					(await parseCSVWithPapa(text)).data,
+				);
+
+				assert.deepStrictEqual(
+					getColumnMaxWidthsFromText(text, delimiter),
+					viaMatrix,
+				);
+			});
+		}
 	});
 });
 
