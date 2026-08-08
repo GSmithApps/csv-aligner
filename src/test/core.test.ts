@@ -130,6 +130,24 @@ suite('CSV parser', () => {
 		});
 	});
 
+	test('detects the delimiter on inputs longer than the sample', async () => {
+		// The delimiter is guessed from a sample of the first lines, so make
+		// sure a file with many more rows than that still lines up, and that
+		// every row past the sample still gets its cell lengths.
+		const rows = ['name\tcount'];
+		for (let i = 0; i < 200; i++) {
+			rows.push(`mochi\t${i}`);
+		}
+
+		const parsed = await parseCSVWithPapa(rows.join('\n'));
+
+		assert.strictEqual(parsed.delimiterLength, 1);
+		assert.strictEqual(parsed.data.length, 201);
+		assert.deepStrictEqual(parsed.data[0], [4, 5]);
+		// row 199 is "mochi\t198", well past the sampled lines
+		assert.deepStrictEqual(parsed.data[199], [5, 3]);
+	});
+
 	test('handles rows with different column counts', async () => {
 		const parsed = await parseCSVWithPapa('a,b,c\nlonger,row');
 
