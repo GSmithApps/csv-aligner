@@ -4,6 +4,11 @@ import { getHintAndCurrentPosfromCol, VsCodeInlayHintAdapter } from './getHintAn
  * Helper function to generate inlay hints from the cell lengths
  * of a CSV.
  *
+ * Heads up if you're changing how many hints come out of here: vscode
+ * silently stops drawing after 1500 inlay hints, so a wide file (87 columns
+ * times 51 rows is 4437) loses everything past roughly the first 17 rows.
+ * See "Why wide files lose their hints" in CONTRIBUTING.md.
+ *
  * @param {string[][]} cellLengths - The lengths of the cells in the CSV
  * @param {number[]} columnMaxWidths - The maximum width of each column
  * @param {number} delimiterLength - The length of the delimiter
