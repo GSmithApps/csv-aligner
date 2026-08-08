@@ -1,40 +1,32 @@
 name: Publish VS Code Extension
 
 on:
-  create:
+  push:
     tags:
-      - 'v*'  # Trigger on creating version tags (e.g., v1.0.0)
+      - 'v*'  # Trigger on pushing version tags (e.g., v1.0.0)
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Check out the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js environment
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'  # Use Node version compatible with vsce
+          node-version: '20'
+          cache: 'npm'
 
-      # Step 3: Install vsce globally
-      - name: Install vsce
-        run: npm install -g vsce
-
-      # step 3.5: install packages
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Authenticate using your Personal Access Token (PAT)
-      - name: Authenticate with the Visual Studio Marketplace
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: echo "//vsce.dev/_authToken=$VSCE_PAT" > ~/.npmrc
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
 
-      # Step 5: Run vsce publish to publish the extension
+      # vsce reads the PAT from VSCE_PAT and publishes the version in
+      # package.json, so remember to bump it before tagging.
       - name: Publish the Extension
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

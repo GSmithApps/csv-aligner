@@ -29,7 +29,9 @@ d-train,mochi ,hi     ,1   ,kitten
 ## To Do / Known Issues
 
 - [The GH Issues](https://github.com/GSmithApps/csv-aligner/issues)
-- [It doesn't handle separators other than commas](https://github.com/GSmithApps/csv-aligner/issues/3)
+- Separators other than commas, and `.tsv` files, should work as of 0.3.0
+  (see [issue 3](https://github.com/GSmithApps/csv-aligner/issues/3)). If you
+  hit a delimiter that still doesn't align, please file an issue.
 - If the CSV appears to render poorly like shown in [this issue](https://github.com/GSmithApps/csv-aligner/issues/5),
   please put the following into your user settings JSON config.
 
@@ -41,6 +43,13 @@ d-train,mochi ,hi     ,1   ,kitten
 
 ## Release Notes
 
+### 0.3.2
+
+- Fixed hint calculation so it only parses the visible window (plus a
+  buffer) instead of everything from the top of the file down. Scrolling
+  deep into a large CSV no longer gets slower the further you go.
+- Column widths are now based on the rows near your viewport, so they
+  can shift as you scroll rather than only ever growing.
 
 ### 0.3.1
 

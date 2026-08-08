@@ -9,3 +9,4 @@ node_modules
 .DS_Store
 
 personal_access_token.txt
+.claude/settings.local.json
