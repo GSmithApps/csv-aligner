@@ -74,12 +74,15 @@ export async function detectDelimiter(csv: string): Promise<string> {
  * the strength length in each cell, and it also returns the length
  * of the delimiter.
  * @param csv takes in the csv data as a string
+ * @param knownDelimiter the delimiter, if the caller already worked it out.
+ * Pass this when parsing a slice of a bigger document, so the slice can't
+ * guess a different delimiter than the document it came from.
  * @returns the length of all the cells in the data, and the delimiter length
  */
-export async function parseCSVWithPapa(csv: string): Promise<CsvData> {
+export async function parseCSVWithPapa(csv: string, knownDelimiter?: string): Promise<CsvData> {
     // We only need Papa for the delimiter -- the cell lengths come from
     // the scan below, over the full input.
-    const delimiter = await detectDelimiter(csv);
+    const delimiter = knownDelimiter ?? (await detectDelimiter(csv));
 
     // Step 2: Reconstruct raw text and capture value lengths
     const valueLengths: number[][] = [];

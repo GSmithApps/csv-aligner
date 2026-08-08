@@ -6,15 +6,15 @@
  */
 
 import * as vscode from 'vscode';
-import { parseCSVWithPapa } from './csvParser';
+import { detectDelimiter, parseCSVWithPapa } from './csvParser';
 import {
     getBufferedBodyLineRange,
     getDocumentLineFromCombinedRowIndex,
     type LineRange,
 } from './helpers/getBufferedBodyLineRange';
+import { getColumnMaxWidthsFromText } from './helpers/getColumnMaxWidthsFromText';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
 import { VsCodeInlayHintAdapter } from './helpers/getHintAndCurrentPosfromCol';
-import { getMaxColumnWidthsFromCellLengths } from './helpers/getMaxColumnWidthsFromCellLengths';
 
 // Constants for buffer sizes
 const BUFFER_LINES_ABOVE = 10;
@@ -61,6 +61,17 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
             return [];
         }
 
+        // The delimiter is settled once, for the whole document, so that the
+        // width scan and the visible-range parse can't disagree about it.
+        const documentText = document.getText();
+        const delimiter = await detectDelimiter(documentText);
+
+        // Column widths come from the entire document, not just what's on
+        // screen, so a column doesn't change width as you scroll past a wide
+        // row. This is a single streaming pass -- see the notes in
+        // getColumnMaxWidthsFromText for why it doesn't build the cell matrix.
+        const maxColumnWidths = getColumnMaxWidthsFromText(documentText, delimiter);
+
         // Get the visible range and calculate the buffered body range.
         const visibleRange = this.getVisibleRange(editor);
         const bodyLineRange = this.getBodyLineRange(document, visibleRange);
@@ -78,14 +89,16 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
             ? headerText
             : `${headerText}\n${bodyText}`;
 
-        const {data: cellLengths, delimiterLength} = await parseCSVWithPapa(textToParse);
+        // Only the visible rows need per-cell lengths, since those are the only
+        // rows we draw hints on.
+        const {data: cellLengths, delimiterLength} = await parseCSVWithPapa(textToParse, delimiter);
 
         if (!cellLengths.length) {
             return [];
         }
 
-        // Calculate max column widths and generate hints
-        const maxColumnWidths = getMaxColumnWidthsFromCellLengths(cellLengths);
+        // Generate hints, padding each visible cell out to its column's
+        // whole-document width.
         const hints: VsCodeInlayHintAdapter[] = getHintsFromCellLengths(
             cellLengths,
             maxColumnWidths,
