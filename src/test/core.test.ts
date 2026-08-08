@@ -9,6 +9,7 @@ import {
 	getBufferedBodyLineRange,
 	getDocumentLineFromCombinedRowIndex,
 } from '../helpers/getBufferedBodyLineRange';
+import { ColumnWidthCache } from '../helpers/columnWidthCache';
 import { getColumnMaxWidthsFromText } from '../helpers/getColumnMaxWidthsFromText';
 import { getHintAndCurrentPosfromCol } from '../helpers/getHintAndCurrentPosfromCol';
 import { getHintsFromCellLengths } from '../helpers/getHintsFromCellLengths';
@@ -124,6 +125,67 @@ suite('Whole-text column widths', () => {
 				);
 			});
 		}
+	});
+});
+
+suite('Column width cache', () => {
+	const entry = { version: 4, delimiter: ',', widths: [3, 7] };
+
+	test('gives back the widths for the version it stored', () => {
+		const cache = new ColumnWidthCache();
+		cache.set('file:///a.csv', entry);
+
+		assert.deepStrictEqual(cache.get('file:///a.csv', 4), entry);
+	});
+
+	test('treats a newer document version as a miss', () => {
+		const cache = new ColumnWidthCache();
+		cache.set('file:///a.csv', entry);
+
+		assert.strictEqual(cache.get('file:///a.csv', 5), undefined);
+	});
+
+	test('misses for a document it has never seen', () => {
+		const cache = new ColumnWidthCache();
+
+		assert.strictEqual(cache.get('file:///nope.csv', 1), undefined);
+	});
+
+	test('keeps documents apart', () => {
+		const cache = new ColumnWidthCache();
+		cache.set('file:///a.csv', entry);
+		cache.set('file:///b.csv', { version: 4, delimiter: '\t', widths: [1] });
+
+		assert.deepStrictEqual(cache.get('file:///a.csv', 4)?.widths, [3, 7]);
+		assert.deepStrictEqual(cache.get('file:///b.csv', 4)?.widths, [1]);
+		assert.strictEqual(cache.size, 2);
+	});
+
+	test('replaces the entry for a document rather than piling up', () => {
+		const cache = new ColumnWidthCache();
+		cache.set('file:///a.csv', entry);
+		cache.set('file:///a.csv', { version: 5, delimiter: ',', widths: [9] });
+
+		assert.strictEqual(cache.size, 1);
+		assert.strictEqual(cache.get('file:///a.csv', 4), undefined);
+		assert.deepStrictEqual(cache.get('file:///a.csv', 5)?.widths, [9]);
+	});
+
+	test('forgets a document, so closing a file does not leak', () => {
+		const cache = new ColumnWidthCache();
+		cache.set('file:///a.csv', entry);
+		cache.forget('file:///a.csv');
+
+		assert.strictEqual(cache.size, 0);
+		assert.strictEqual(cache.get('file:///a.csv', 4), undefined);
+	});
+
+	test('forgetting a document it does not have is harmless', () => {
+		const cache = new ColumnWidthCache();
+
+		cache.forget('file:///never-opened.csv');
+
+		assert.strictEqual(cache.size, 0);
 	});
 });
 

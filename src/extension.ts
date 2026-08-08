@@ -12,6 +12,7 @@ import {
     getDocumentLineFromCombinedRowIndex,
     type LineRange,
 } from './helpers/getBufferedBodyLineRange';
+import { ColumnWidthCache } from './helpers/columnWidthCache';
 import { getColumnMaxWidthsFromText } from './helpers/getColumnMaxWidthsFromText';
 import { getHintsFromCellLengths } from './helpers/getHintsFromCellLengths';
 import { VsCodeInlayHintAdapter } from './helpers/getHintAndCurrentPosfromCol';
@@ -21,12 +22,54 @@ const BUFFER_LINES_ABOVE = 10;
 const BUFFER_LINES_BELOW = 10;
 
 export function activate(context: vscode.ExtensionContext) {
+    const provider = new CsvAlignInlayHintsProvider();
+
     context.subscriptions.push(
-        vscode.languages.registerInlayHintsProvider('csv', new CsvAlignInlayHintsProvider())
+        vscode.languages.registerInlayHintsProvider('csv', provider),
+        // Once a document is closed we'll never be asked about it again, so
+        // stop holding its widths.
+        vscode.workspace.onDidCloseTextDocument(document => provider.forgetDocument(document)),
     );
 }
 
 class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
+    private readonly widthCache = new ColumnWidthCache();
+
+    forgetDocument(document: vscode.TextDocument): void {
+        this.widthCache.forget(document.uri.toString());
+    }
+
+    /**
+     * The delimiter and the whole-document column widths, recomputed only
+     * when the document has actually changed since we last looked.
+     */
+    private async getWidthsAndDelimiter(
+        document: vscode.TextDocument
+    ): Promise<{ delimiter: string; widths: number[] }> {
+        const key = document.uri.toString();
+        const version = document.version;
+
+        const cached = this.widthCache.get(key, version);
+        if (cached !== undefined) {
+            return cached;
+        }
+
+        // The delimiter is settled once, for the whole document, so that the
+        // width scan and the visible-range parse can't disagree about it.
+        const documentText = document.getText();
+        const delimiter = await detectDelimiter(documentText);
+
+        // Column widths come from the entire document, not just what's on
+        // screen, so a column doesn't change width as you scroll past a wide
+        // row. This is a single streaming pass -- see the notes in
+        // getColumnMaxWidthsFromText for why it doesn't build the cell matrix.
+        const widths = getColumnMaxWidthsFromText(documentText, delimiter);
+
+        this.widthCache.set(key, { version, delimiter, widths });
+
+        return { delimiter, widths };
+    }
+
     private getVisibleRange(editor: vscode.TextEditor): vscode.Range {
         const visibleRanges = editor.visibleRanges;
         if (visibleRanges.length === 0) {
@@ -61,16 +104,7 @@ class CsvAlignInlayHintsProvider implements vscode.InlayHintsProvider {
             return [];
         }
 
-        // The delimiter is settled once, for the whole document, so that the
-        // width scan and the visible-range parse can't disagree about it.
-        const documentText = document.getText();
-        const delimiter = await detectDelimiter(documentText);
-
-        // Column widths come from the entire document, not just what's on
-        // screen, so a column doesn't change width as you scroll past a wide
-        // row. This is a single streaming pass -- see the notes in
-        // getColumnMaxWidthsFromText for why it doesn't build the cell matrix.
-        const maxColumnWidths = getColumnMaxWidthsFromText(documentText, delimiter);
+        const { delimiter, widths: maxColumnWidths } = await this.getWidthsAndDelimiter(document);
 
         // Get the visible range and calculate the buffered body range.
         const visibleRange = this.getVisibleRange(editor);
