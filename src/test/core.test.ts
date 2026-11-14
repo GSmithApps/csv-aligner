@@ -71,7 +71,7 @@ suite('Core helpers', () => {
 suite('Whole-text column widths', () => {
 	test('gets the widest cell in each column', () => {
 		const widths = getColumnMaxWidthsFromText(
-			'name,count\nmochi,12\nabcdefg,1',
+			'name,count\nabcde,12\nabcdefg,1',
 			',',
 		);
 
@@ -94,13 +94,13 @@ suite('Whole-text column widths', () => {
 	});
 
 	test('ignores the carriage return in crlf files', () => {
-		const widths = getColumnMaxWidthsFromText('name,count\r\nmochi,12\r\n', ',');
+		const widths = getColumnMaxWidthsFromText('name,count\r\nabcde,12\r\n', ',');
 
 		assert.deepStrictEqual(widths, [5, 5]);
 	});
 
 	test('works with a tab delimiter', () => {
-		const widths = getColumnMaxWidthsFromText('name\tcount\nmochi\t12', '\t');
+		const widths = getColumnMaxWidthsFromText('name\tcount\nabcde\t12', '\t');
 
 		assert.deepStrictEqual(widths, [5, 5]);
 	});
@@ -264,7 +264,7 @@ suite('CSV parser', () => {
 		// every row past the sample still gets its cell lengths.
 		const rows = ['name\tcount'];
 		for (let i = 0; i < 200; i++) {
-			rows.push(`mochi\t${i}`);
+			rows.push(`abcde\t${i}`);
 		}
 
 		const parsed = await parseCSVWithPapa(rows.join('\n'));
@@ -272,7 +272,7 @@ suite('CSV parser', () => {
 		assert.strictEqual(parsed.delimiterLength, 1);
 		assert.strictEqual(parsed.data.length, 201);
 		assert.deepStrictEqual(parsed.data[0], [4, 5]);
-		// row 199 is "mochi\t198", well past the sampled lines
+		// row 199 is "abcde\t198", well past the sampled lines
 		assert.deepStrictEqual(parsed.data[199], [5, 3]);
 	});
 
