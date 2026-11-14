@@ -71,7 +71,7 @@ suite('Core helpers', () => {
 suite('Whole-text column widths', () => {
 	test('gets the widest cell in each column', () => {
 		const widths = getColumnMaxWidthsFromText(
-			'name,count\nmochi,12\nd-train,1',
+			'name,count\nmochi,12\nabcdefg,1',
 			',',
 		);
 
@@ -223,7 +223,7 @@ suite('Visible range helpers', () => {
 
 suite('CSV parser', () => {
 	test('gets cell lengths from comma-separated values', async () => {
-		const parsed = await parseCSVWithPapa('grant,murphy,1234\nd-train,mochi,1');
+		const parsed = await parseCSVWithPapa('grant,murphy,1234\nabcdefg,abcde,1');
 
 		assert.deepStrictEqual(parsed, {
 			data: [
@@ -247,7 +247,7 @@ suite('CSV parser', () => {
 	});
 
 	test('gets cell lengths from tab-separated values', async () => {
-		const parsed = await parseCSVWithPapa('name\tcount\nmochi\t12');
+		const parsed = await parseCSVWithPapa('name\tcount\nabcde\t12');
 
 		assert.deepStrictEqual(parsed, {
 			data: [
