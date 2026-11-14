@@ -1,23 +1,20 @@
 A VSCode extension that uses the inlay hints to
 render csvs as columns.
 
-![git](images/csv-aligner1.gif)
-
-
 **Tip: We recommend that this is used with the rainbow csv extension, which will color the columns.**
 
 A CSV like this:
 
 ```csv
 grant,murphy,whaddup,1234,dog
-d-train,mochi,hi,1,kitten
+drew,huck,hi,1,pup
 ```
 
 Would be rendered like this:
 
 ```csv
-grant  ,murphy,whaddup,1234,dog
-d-train,mochi ,hi     ,1   ,kitten
+grant,murphy,whaddup,1234,dog
+drew ,huck  ,hi     ,1   ,pup
 ```
 
 ## Features
