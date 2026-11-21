@@ -47,6 +47,11 @@ drew ,huck  ,hi     ,1   ,pup
 
 ## Release Notes
 
+### 0.4.1
+
+- Updated documentation and development setup to use the dev container.
+- Updated core helper tests. Extension runtime behavior is unchanged from 0.4.0.
+
 ### 0.4.0
 
 - Column widths are now based on the whole file instead of the rows near
