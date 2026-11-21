@@ -2,18 +2,17 @@ Please contribute! We have some [open issues](https://github.com/GSmithApps/csv-
 
 # Setup
 
-## npm packages
+Open the repo in VS Code and run **Dev Containers: Reopen in Container**.
+The dev container provides Node.js and runs `npm ci` automatically to
+install the dependencies from `package-lock.json`.
 
-- **package.json**: run `npm install`
+If you develop outside the container, install Node.js and run `npm ci`
+from the repo root. Use `npm install` when adding or updating dependencies.
 
-## Global Packages
-
-- **node**: need this to run things.
-- **vsce**: need this to package and push to vs code market.
-
-You can just install
-the two globally, or you can use nix and direnv.
-This is done with **flake.nix** and **.envrc**.
+You don't need to install `vsce` for normal development. GitHub Actions
+installs it to package and publish releases when you push a `v*` tag.
+If you want a local `.vsix` file to install manually, run
+`npx @vscode/vsce package`.
 
 # Viewing Docs
 

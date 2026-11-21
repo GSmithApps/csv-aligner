@@ -9,9 +9,6 @@ src/**
 .devcontainer/**
 docs/**
 .github/**
-flake.nix
-flake.lock
-.envrc
 CONTRIBUTING.md
 
 .yarnrc
